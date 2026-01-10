@@ -1,0 +1,100 @@
+<!--
+1. Interacciones con los personajes?
+2. ¿Qué tal seleccionar builds para luego peleer como en jueguitos de pelea tipo smash?
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Cuestionarás</title>
+        <script src="js/Contraption.js"></script>
+        <link rel="stylesheet" href="Contraption.css">
+    </head>
+    <body>
+        
+        <section id="seleccionar-personaje">
+            <h1 class="titulo">Este es un titulo</h1>
+
+            <h2 class="subtitulo">Elige a un personaje: </h2>
+            
+            <div class="tarjetas">
+                <input type="radio" name="personaje" id="Lark">
+                <label class="tarjeta-personaje" for="Lark">
+                    <p>Lark</p>
+                    <img src="./assets/EJvUVDfWwAc4ERq.png">
+                </label>
+                
+                <input type="radio" name="personaje" id="Siel">
+                <label class="tarjeta-personaje" for="Siel">
+                    <p>Siel</p>
+                    <img src="./assets/EJvUVDfWwAc4ERq.png">
+                </label>
+                
+                <input type="radio" name="personaje" id="Medio">
+                <label class="tarjeta-personaje" for="Medio">
+                    <p>Medio</p>
+                    <img src="./assets/EJvUVDfWwAc4ERq.png">
+                </label>
+
+                <input type="radio" name="personaje" id="Rhok">
+                <label class="tarjeta-personaje" for="Rhok">
+                    <p>Rhok</p>
+                    <img src="./assets/EJvUVDfWwAc4ERq.png">
+                </label>
+            </div>
+            
+            <!--
+            Lark -> Agua
+            Siel -> Aire
+            Medio -> Tierra
+            Rhok -> Fuego  
+            -->
+
+            <button id="boton-seleccionar">Seleccionar</button>
+        </section>
+        <section id="seleccionar-ataque">
+            <h1 class="titulo">Pokemon</h1>
+            
+            <h2 class="subtitulo">Elige un ataque </h2>
+            <div>
+                <button id="boton-fuego">Fuego</button>
+                <button id="boton-agua">Agua</button>
+                <button id="boton-tierra">Tierra</button>
+            </div>
+
+        </section>
+
+        <section class="combate" id="combate"> 
+            <div class="cuadro-jugador" id="cuadro-jugador"> <!-- CSS grid reconoce los tag div como bloques para organizar en cuadricula-->
+                <div class="sprite-container">
+                    <img src="./assets/EJvUVDfWwAc4ERq.png">
+                </div>
+                
+                <p class="barra-vida"><span id="mascota-jugador">Tu Personaje</span> tiene <span id="hp-jugador">3</span> vidas </p>
+            </div>
+            <div class="cuadro-jugador" id="cuadro-jugador">
+                <div class="sprite-container">
+                    <img src="./assets/EJvUVDfWwAc4ERq.png">
+                </div>
+                <p class="barra-vida"> <span id="mascota-oponente">El personaje</span> enemigo tiene <span id="hp-oponente">3</span> vidas </p>
+            </div>
+            
+        </section>
+
+        <section id="mensajes">
+           <div class="encabezado"> Log </div>
+           <div id="mensajes-container">
+
+           </div>
+        </section>
+
+        <section id="resultado">
+
+        </section>
+        <section id="reiniciar">
+            <button id="boton-reiniciar">Reiniciar</button>
+        </section>
+        
+    </body>
+
+</html>

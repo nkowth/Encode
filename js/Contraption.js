@@ -12,9 +12,14 @@ let botonReiniciar
 let seccionSeleccionarAtaque
 let seccionReiniciar
 let seccionSeleccionarPersonaje
+let seccionMensajes
 
+let contenedorMensajes
 
 function iniciarJuego(){
+
+    contenedorMensajes = document.getElementById("mensajes-container")
+
     seccionSeleccionarPersonaje = document.getElementById("seleccionar-personaje")
 
     seccionSeleccionarAtaque= document.getElementById("seleccionar-ataque")
@@ -22,6 +27,14 @@ function iniciarJuego(){
 
     seccionReiniciar = document.getElementById("reiniciar")
     seccionReiniciar.style.display = 'none'
+
+    seccionCombate = document.getElementById("combate")
+    seccionCombate.style.display = 'none'
+
+    seccionMensajes = document.getElementById("mensajes")
+    seccionMensajes.style.display = 'none'
+
+    
 
     let botonPersonajeJugador = document.getElementById("boton-seleccionar")
     botonPersonajeJugador.addEventListener('click',seleccionarMascotaJugador)
@@ -63,21 +76,22 @@ function resultadoJuego(){
 }
 
 function resultadoCombate(){
-    let mensajes = document.getElementById("mensajes")
-    let nuevoMensaje
+
+    let nuevoParrafo = document.createElement("p")
     
     if (ataqueJugador == ataqueOponente){
-        nuevoMensaje = document.createTextNode("Ha sido un empate")
+        nuevoParrafo.innerHTML = "Ha sido un empate"
     }
     else if((ataqueJugador == "Fuego" && ataqueOponente == "Tierra") || (ataqueJugador == "Agua" && ataqueOponente== "Fuego") || (ataqueJugador == "Tierra" && ataqueOponente == "Agua")){
-        nuevoMensaje = document.createTextNode(personajeJugador + " ha infligido daño a " + mascotaOponente)
+        nuevoParrafo.innerHTML = personajeJugador + " ha infligido daño a " + mascotaOponente
         vidaOponente.innerHTML = parseInt(vidaOponente.innerHTML) - 1
     }
     else{
-        nuevoMensaje = document.createTextNode(mascotaOponente + " ha infligido daño a " + personajeJugador)
+        nuevoParrafo.innerHTML = mascotaOponente + " ha infligido daño a " + personajeJugador
         vidaJugador.innerHTML = parseInt(vidaJugador.innerHTML) - 1
     }
-    mensajes.appendChild(nuevoMensaje)
+
+    contenedorMensajes.appendChild(nuevoParrafo)
 }
 
 function numeroAleatorio(min, max){
@@ -90,13 +104,10 @@ function seleccionarAtaqueOponente(){
 
     ataqueOponente = ataqueTipo.at(index)
 
-    let mensajes = document.getElementById("mensajes")
-    mensajes.innerHTML = ""
-
     let nuevoParrafo = document.createElement("p")
     nuevoParrafo.innerHTML = personajeJugador + " ha atacado con " + ataqueJugador+ ". " + mascotaOponente + " ha atacado con " + ataqueOponente
     
-    mensajes.appendChild(nuevoParrafo)
+    contenedorMensajes.appendChild(nuevoParrafo)
 
     resultadoCombate()
     resultadoJuego()
@@ -139,6 +150,8 @@ function seleccionarMascotaJugador(){
 
     seccionSeleccionarAtaque.style.display = 'block'
     seccionSeleccionarPersonaje.style.display = 'none'
+    seccionCombate.style.display = 'grid'
+    seccionMensajes.style.display= 'grid'
 }
 
 function seleccionarMascotaOponente(){
