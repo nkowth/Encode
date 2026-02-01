@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8">
         <title> Cuestionarás</title>
-        <script src="js/Contraption.js"></script>
+        
         <link rel="stylesheet" href="Contraption.css">
     </head>
     <body>
@@ -17,30 +17,7 @@
 
             <h2 class="subtitulo">Elige a un personaje: </h2>
             
-            <div class="tarjetas">
-                <input type="radio" name="personaje" id="Lark">
-                <label class="tarjeta-personaje" for="Lark">
-                    <p>Lark</p>
-                    <img src="./assets/EJvUVDfWwAc4ERq.png">
-                </label>
-                
-                <input type="radio" name="personaje" id="Siel">
-                <label class="tarjeta-personaje" for="Siel">
-                    <p>Siel</p>
-                    <img src="./assets/EJvUVDfWwAc4ERq.png">
-                </label>
-                
-                <input type="radio" name="personaje" id="Medio">
-                <label class="tarjeta-personaje" for="Medio">
-                    <p>Medio</p>
-                    <img src="./assets/EJvUVDfWwAc4ERq.png">
-                </label>
-
-                <input type="radio" name="personaje" id="Rhok">
-                <label class="tarjeta-personaje" for="Rhok">
-                    <p>Rhok</p>
-                    <img src="./assets/EJvUVDfWwAc4ERq.png">
-                </label>
+            <div id="contenedor-tarjetas" class="tarjetas">
             </div>
             
             <!--
@@ -56,10 +33,8 @@
             <h1 class="titulo">Pokemon</h1>
             
             <h2 class="subtitulo">Elige un ataque </h2>
-            <div>
-                <button id="boton-fuego">Fuego</button>
-                <button id="boton-agua">Agua</button>
-                <button id="boton-tierra">Tierra</button>
+            <div id="contenedor-botones">
+
             </div>
 
         </section>
@@ -89,12 +64,14 @@
         </section>
 
         <section id="resultado">
-
+            <p id="resultado-parrafo"> </p>
         </section>
         <section id="reiniciar">
             <button id="boton-reiniciar">Reiniciar</button>
         </section>
         
+
+        <script src="js/Contraption.js"></script>
     </body>
 
 </html>
