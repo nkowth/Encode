@@ -11,6 +11,9 @@ const contenedorTarjetas = document.getElementById("contenedor-tarjetas")
 const contenedorBotones = document.getElementById("contenedor-botones")
 const contenedorMensajes = document.getElementById("mensajes-container")
 
+const seccionVerMapa = document.getElementById("ver-mapa")
+const mapa = document.getElementById("mapa")
+
 let botonFuego
 let botonAgua
 let botonPlanta
@@ -21,29 +24,63 @@ let vidaJugador
 let ataqueJugador
 let personajeJugador
 
-let mascotaOponente
+let personajeOponente
 let ataqueOponente
-let indexMascotaOponente
+let indexPersonajeOponente
+let personajeJugadorOBJ
 
 let turno = 0
 
-let opcionDeMokepones
+let opcionDePersonajes
 let botones = []
 let ataquesJugador = []
 let ataquesPersonajeEnemigo = []
 
+let lienzo = mapa.getContext("2d")
+let intervalo
+let pasos = 5
+console.log(mapa)
+let altura
+let anchoMapa = window.innerWidth - 200
+
+altura = anchoMapa * 600 / 800
+const anchoMaximoDelMapa = 1000
+
+if(anchoMapa > anchoMaximoDelMapa){
+    anchoMapa = anchoMaximoDelMapa - 20
+}
+
+mapa.width = anchoMapa
+mapa.height = altura
+
+let mapaBG = new Image()
+mapaBG.src = './assets/un-carro-derrotado2.jpg'
+
 class Personaje {
-    constructor(nombre, foto, vida){
+    constructor(nombre, foto, vida, x=20, y=20){
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
         this.ataques =[]
+        this.x = x
+        this.y = y
+        this.ancho = 80
+        this.alto = 90
+        this.mapaFoto = new Image()
+        this.mapaFoto.src = foto
+        this.velocidadX = 0
+        this.velocidadY = 0
     }
     
+    pintarMokepon(x,y){
+        lienzo.drawImage(
+            this.mapaFoto, x, y, this.ancho, this.alto
+        )
+    }
 }
 
 let Siel = new Personaje("Siel", "./assets/EJvUVDfWwAc4ERq.png", 3)
-let Lark = new Personaje("Lark", "./assets/EJvUVDfWwAc4ERq.png", 3)
+let Lark = new Personaje("Lark", "./assets/EJvUVDfWwAc4ERq.png", 3, 400, 280)
 let Rook = new Personaje("Rook", "./assets/EJvUVDfWwAc4ERq.png", 3)
 let Kow = new Personaje("Kow", "./assets/EJvUVDfWwAc4ERq.png", 3)
 
@@ -82,9 +119,10 @@ function iniciarJuego(){
     seccionReiniciar.style.display = 'none'
     seccionCombate.style.display = 'none'
     seccionMensajes.style.display = 'none'
+    seccionVerMapa.style.display = 'none'
 
     arrPersonajes.forEach((mokepon)=>{
-        opcionDeMokepones = `
+        opcionDePersonajes = `
         <input type="radio" name="personaje" id=${mokepon.nombre}>
                 <label class="tarjeta-personaje" for=${mokepon.nombre}>
                     <p>${mokepon.nombre}</p>
@@ -92,10 +130,10 @@ function iniciarJuego(){
                 </label>
         `
         
-        contenedorTarjetas.innerHTML += opcionDeMokepones
+        contenedorTarjetas.innerHTML += opcionDePersonajes
 
     })
-    botonPersonajeJugador.addEventListener('click',seleccionarMascotaJugador)
+    botonPersonajeJugador.addEventListener('click',seleccionarPersonajeJugador)
     
     botonReiniciar.addEventListener('click', reiniciarJuego)
 
@@ -141,11 +179,11 @@ function resultadoCombate(){
         nuevoParrafo.innerHTML = "Ha sido un empate"
     }
     else if((aJugador == "Fuego" && aOponente == "Planta") || (aJugador == "Agua" && aOponente== "Fuego") || (aJugador == "Planta" && aOponente == "Agua")){
-        nuevoParrafo.innerHTML = personajeJugador + " ha infligido daño a " + mascotaOponente
+        nuevoParrafo.innerHTML = personajeJugador + " ha infligido daño a " + personajeOponente
         vidaOponente.innerHTML = parseInt(vidaOponente.innerHTML) - 1
     }
     else{
-        nuevoParrafo.innerHTML = mascotaOponente + "-oponente ha infligido daño a " + personajeJugador
+        nuevoParrafo.innerHTML = personajeOponente + "-oponente ha infligido daño a " + personajeJugador
         vidaJugador.innerHTML = parseInt(vidaJugador.innerHTML) - 1
     }
 
@@ -159,15 +197,15 @@ function numeroAleatorio(min, max){
 }
 
 function seleccionarAtaqueOponente(){
-    let index = numeroAleatorio(0,arrPersonajes[indexMascotaOponente].ataques.length - 1)
+    let index = numeroAleatorio(0,arrPersonajes[indexPersonajeOponente].ataques.length - 1)
     
 
-    ataqueOponente = arrPersonajes[indexMascotaOponente].ataques.at(index)
+    ataqueOponente = arrPersonajes[indexPersonajeOponente].ataques.at(index)
     ataquesPersonajeEnemigo.push(ataqueOponente.nombre)
     console.log(ataquesPersonajeEnemigo)
 
     let nuevoParrafo = document.createElement("p")
-    nuevoParrafo.innerHTML = personajeJugador + " ha atacado con " + ataqueJugador + ". " + mascotaOponente + " ha atacado con " + ataqueOponente.nombre
+    nuevoParrafo.innerHTML = personajeJugador + " ha atacado con " + ataqueJugador + ". " + personajeOponente + " ha atacado con " + ataqueOponente.nombre
     
     contenedorMensajes.appendChild(nuevoParrafo)
 
@@ -230,14 +268,14 @@ function secuenciaAtaque(){
         })
     })
 }
-function seleccionarMascotaJugador(){
+function seleccionarPersonajeJugador(){
     
     let PersonajesIndex
     
     let inputSiel = document.getElementById(arrPersonajes[0].nombre)
     let inputLark = document.getElementById(arrPersonajes[1].nombre)
     let inputRook = document.getElementById(arrPersonajes[2].nombre)
-    let inputKow = document.getElementById(arrPersonajes[3].nombre)
+    let inputKow = document.getElementById(arrPersonajes[3].nombre)  
 
     if( inputLark.checked ){
         alert("Seleccionaste a Lark")
@@ -260,25 +298,28 @@ function seleccionarMascotaJugador(){
         return
     }
 
-    personajeJugador = arrPersonajes[PersonajesIndex].nombre
-    document.getElementById("mascota-jugador").innerHTML = personajeJugador
+    personajeJugadorOBJ = arrPersonajes[PersonajesIndex]
+    personajeJugador = personajeJugadorOBJ.nombre
+    document.getElementById("personaje-jugador").innerHTML = personajeJugador
 
-    seleccionarMascotaOponente()
+    seccionVerMapa.style.display = 'flex'
+    
+    iniciarMapa()
+
+    seleccionarPersonajeOponente()
     generarBotonesPersonaje(PersonajesIndex)
 
-    seccionSeleccionarAtaque.style.display = 'block'
+    
     seccionSeleccionarPersonaje.style.display = 'none'
-    seccionCombate.style.display = 'grid'
-    seccionMensajes.style.display= 'grid'
+    
 }
 
-function seleccionarMascotaOponente(){
-    indexMascotaOponente = numeroAleatorio(0,arrPersonajes.length - 1)
+function seleccionarPersonajeOponente(){
+    indexPersonajeOponente = numeroAleatorio(0,arrPersonajes.length - 1)
 
+    personajeOponente = arrPersonajes.at(indexPersonajeOponente).nombre
 
-    mascotaOponente = arrPersonajes.at(indexMascotaOponente).nombre
-
-    document.getElementById("mascota-oponente").innerHTML = mascotaOponente
+    document.getElementById("personaje-oponente").innerHTML = personajeOponente
 }
 
 function deshabilitarBotones(){
@@ -297,6 +338,104 @@ function rehabilitarBotones(){
 
 function reiniciarJuego(){
     location.reload()
+}
+
+function pintarCanvas(){
+    lienzo.clearRect(0,0, mapa.width, mapa.height)
+    personajeJugadorOBJ.x = personajeJugadorOBJ.x + personajeJugadorOBJ.velocidadX
+    personajeJugadorOBJ.y = personajeJugadorOBJ.y + personajeJugadorOBJ.velocidadY
+    lienzo.drawImage(mapaBG, 0, 0, mapa.width, mapa.height)
+    lienzo.drawImage(personajeJugadorOBJ.mapaFoto, personajeJugadorOBJ.x,personajeJugadorOBJ.y,personajeJugadorOBJ.ancho,personajeJugadorOBJ.alto)
+    Lark.pintarMokepon(400, 280)
+
+    if(personajeJugadorOBJ.velocidadX !== 0 || personajeJugadorOBJ.velocidadY !== 0){
+        revisarColision(Lark)
+    }
+}
+
+function moverDerecha() {
+    
+    personajeJugadorOBJ.velocidadX  = pasos
+    pintarCanvas()
+}
+
+function moverIzquierda() {
+   
+    personajeJugadorOBJ.velocidadX  = -pasos
+    pintarCanvas()
+}
+
+function moverAbajo() {
+   
+    personajeJugadorOBJ.velocidadY  = pasos
+    pintarCanvas()
+}
+
+function moverArriba() {
+    
+    personajeJugadorOBJ.velocidadY  = -pasos
+    pintarCanvas()
+}
+
+function sePresionaUnaTecla(event){
+    
+    switch(event.key){
+        case 'ArrowUp':
+            moverArriba()
+            break;
+        case 'ArrowDown':
+            moverAbajo()
+            break;
+        case 'ArrowLeft':
+            moverIzquierda()
+            break;
+        case 'ArrowRight':
+            moverDerecha()
+            break;
+        default:
+            break;
+    }
+}
+
+function detenerMovimiento(){
+    personajeJugadorOBJ.velocidadX = 0
+    personajeJugadorOBJ.velocidadY = 0
+    pintarCanvas()
+}
+
+function iniciarMapa(){
+    intervalo = setInterval(pintarCanvas, 50)
+
+    window.addEventListener('keydown', sePresionaUnaTecla)
+    window.addEventListener('keyup', detenerMovimiento)
+}
+
+function revisarColision(objeto){
+
+    const arribaObjeto = objeto.y
+    const abajoObjeto = objeto.y + objeto.alto
+    const derechaObjeto = objeto.x + objeto.ancho
+    const izquierdaObjeto = objeto.x
+    
+    const arribaPersonaje = personajeJugadorOBJ.y
+    const abajoPersonaje = personajeJugadorOBJ.y + personajeJugadorOBJ.alto
+    const derechaPersonaje = personajeJugadorOBJ.x + personajeJugadorOBJ.ancho
+    const izquierdaPersonaje = personajeJugadorOBJ.x
+
+    if(
+        abajoPersonaje < arribaObjeto ||
+        arribaPersonaje > abajoObjeto ||
+        derechaPersonaje < izquierdaObjeto ||
+        izquierdaPersonaje > derechaObjeto
+    ){
+        return
+    }
+    
+    detenerMovimiento()
+    seccionVerMapa.style.display = 'none'
+    seccionSeleccionarAtaque.style.display = 'block'
+    seccionCombate.style.display = 'grid'
+    seccionMensajes.style.display= 'grid'
 }
 
 window.addEventListener('load', iniciarJuego)

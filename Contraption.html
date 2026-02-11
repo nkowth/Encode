@@ -29,8 +29,18 @@
 
             <button id="boton-seleccionar">Seleccionar</button>
         </section>
+
+        <section id="ver-mapa">
+            <h1 class="titulo"> Muevete </h1>
+            <canvas id="mapa"></canvas>
+            <button onmouseup="detenerMovimiento()"  onmousedown="moverArriba()">Arriba</button>
+            <button onmouseup="detenerMovimiento()" onmousedown="moverIzquierda()">Izquierda</button>
+            <button onmouseup="detenerMovimiento()" onmousedown="moverAbajo()">Abajo</button>
+            <button onmouseup="detenerMovimiento()" onmousedown="moverDerecha()">Derecha</button>
+        </section>
+
         <section id="seleccionar-ataque">
-            <h1 class="titulo">Pokemon</h1>
+            <h1 class="titulo">Peleen</h1>
             
             <h2 class="subtitulo">Elige un ataque </h2>
             <div id="contenedor-botones">
@@ -45,13 +55,13 @@
                     <img src="./assets/EJvUVDfWwAc4ERq.png">
                 </div>
                 
-                <p class="barra-vida"><span id="mascota-jugador">Tu Personaje</span> tiene <span id="hp-jugador">3</span> vidas </p>
+                <p class="barra-vida"><span id="personaje-jugador">Tu Personaje</span> tiene <span id="hp-jugador">3</span> vidas </p>
             </div>
             <div class="cuadro-jugador" id="cuadro-jugador">
                 <div class="sprite-container">
                     <img src="./assets/EJvUVDfWwAc4ERq.png">
                 </div>
-                <p class="barra-vida"> <span id="mascota-oponente">El personaje</span> enemigo tiene <span id="hp-oponente">3</span> vidas </p>
+                <p class="barra-vida"> <span id="personaje-oponente">El personaje</span> enemigo tiene <span id="hp-oponente">3</span> vidas </p>
             </div>
             
         </section>
